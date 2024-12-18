@@ -1,0 +1,7 @@
+numpy
+pandas
+matplotlib
+seaborn
+GEOparse
+scikit-learn
+gseapy
