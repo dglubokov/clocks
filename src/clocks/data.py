@@ -8,7 +8,6 @@ from pathlib import Path
 
 import pandas as pd
 import requests
-from tqdm.auto import tqdm
 
 from clocks.paths import DATA_DIR
 
@@ -22,15 +21,14 @@ def download(url: str, dest: Path, *, force: bool = False) -> Path:
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
+    print(f"downloading {url}")
     with requests.get(url, stream=True, timeout=60, headers={"User-Agent": "Mozilla/5.0"}) as r:
         r.raise_for_status()
-        total = int(r.headers.get("content-length", 0)) or None
-        bar = tqdm(total=total, unit="B", unit_scale=True, desc=dest.name)
-        with open(tmp, "wb") as f, bar:
+        with open(tmp, "wb") as f:
             for chunk in r.iter_content(chunk_size=1 << 20):
                 f.write(chunk)
-                bar.update(len(chunk))
     tmp.rename(dest)
+    print(f"saved {dest.stat().st_size / 1e6:.1f} MB to {dest}")
     return dest
 
 

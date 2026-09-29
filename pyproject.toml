@@ -16,7 +16,6 @@ dependencies = [
     "seaborn>=0.13",
     "xlrd>=2.0",      # legacy .xls supplementary tables
     "requests>=2.32",
-    "tqdm>=4.66",
 ]
 
 [dependency-groups]
