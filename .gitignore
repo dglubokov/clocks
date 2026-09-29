@@ -1,3 +1,23 @@
+# Python
 __pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Downloaded data and trained models (re-created by the notebooks)
 data/
 models/
+*.part
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# OS
+.DS_Store
+
+# Local literature: PDFs, extracted text, private notes (not redistributed)
+papers/

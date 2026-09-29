@@ -1,75 +1,61 @@
 # Aging Clocks
 
-**A Comprehensive Collection of Aging Clocks: Historical Context, Implementation Details, and Critical Insights**
+**A hands-on course on biological aging clocks, reproduced on real public data.**
 
-This repository provides a curated set of aging clock implementations, along with background information, theoretical underpinnings, and critical analyses. Aging clocks are powerful tools to estimate biological age from various biological data, and this collection aims to facilitate learning, research, and reproducibility by providing well-documented examples of popular models.
+Aging clocks are statistical models that estimate age from molecular measurements, most famously DNA methylation. This course goes through the literature **in the order it was published**. For each landmark paper we:
 
-## Overview
+1. explain the biological and statistical question it asked;
+2. download the original public data;
+3. reproduce the key tables and figures and **compare our numbers with the published ones**;
+4. show where the method breaks: data leakage, batch effects, cell composition, overfitting;
+5. end with exercises and references.
 
-- **What are aging clocks?**  
-    Aging clocks are computational models that predict biological age based on molecular data, such as DNA methylation, gene expression, or other biomarkers. These models are trained on datasets with known chronological age labels to learn the relationship between molecular patterns and aging.
+The course is written for a mixed audience. Biologists get the statistics and machine learning explained; ML practitioners get the biology explained. Each step uses whichever language is the natural tool for it: Python (pandas, scikit-learn) or R (WGCNA, limma, Bioconductor).
 
-- **Why this repository?**  
-  This repository compiles code implementations of well-known aging clocks, enabling researchers and practitioners to:
-  - Understand the mathematical and biological foundations of each model.
-  - Reproduce reported results and adapt the methods to new datasets.
-  - Compare performance across different aging clock models.
-  - Explore the historical development and critical commentary on their applications and limitations.
+> **Status:** rebuilding from scratch. The previous version of this repository is available under the git tag `legacy`.
 
-## Getting Started
+## Chapters
 
-### Prerequisites
+| # | Paper | Data | Topics | Status |
+|---|---|---|---|---|
+| 1 | Bocklandt et al. 2011, *Epigenetic predictor of age* ([doi](https://doi.org/10.1371/journal.pone.0014821)) | GSE28746, saliva, 27k | methylation arrays, beta values, twins and technical replicates, q-values, WGCNA, leave-one-out, **data leakage** | in progress |
 
-- **Python**: Ensure you have Python 3.7+ installed.
-- **Package Requirements**: Review the `requirements.txt` file and install the necessary packages `pip install -r requirements.txt`.
-- **Jupyter**: For interactive exploration, install Jupyter Notebook or JupyterLab (link to [installation guide](https://jupyter.org/install)).
-- **R**: Some notebooks may require R for specific analyses. Install R from the [official website](https://www.r-project.org/) and use the `IRkernel` package for Jupyter integration.
-- **R Packages**: If R is required, install the necessary packages using `install.packages("package_name")` within an R environment.
+More chapters will be added chronologically (Koch & Wagner 2011, Garagnani 2012, Hannum 2013, Horvath 2013, …).
 
-### Installation
+## Repository layout
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/dglubokov/clocks
-   ```
+```
+notebooks/<YEAR>_<Author>/   course chapters (Jupyter, Python or R kernel)
+src/clocks/                  small shared package: downloading, caching, parsing
+R/install.R                  R / Bioconductor dependencies
+references.bib               bibliography for all chapters
+tests/                       tests for the shared package
+data/                        downloaded data cache (created on first run, not in git)
+```
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Setup
 
-3. **Navigate to a specific clock’s directory:**
-   ```bash
-   cd clocks/2013_Horvath
-   ```
+**Python** uses [uv](https://docs.astral.sh/uv/). The lock file pins every version.
 
+```bash
+git clone https://github.com/dglubokov/clocks
+cd clocks
+uv sync                      # creates .venv with all dependencies
+uv run jupyter lab
+```
 
-### Running the Notebook
+**R** is needed for some chapters. Install R ≥ 4.5 from [r-project.org](https://www.r-project.org/), then run:
 
-1. Open the chosen clock’s Jupyter notebook (`.ipynb` file).
-2. Run all cells in sequence to:
-   - Load example datasets (if provided).
-   - Train or apply the clock model.
-   - Visualize results and metrics.
+```bash
+uv run Rscript R/install.R   # Bioconductor packages + registers the "R" Jupyter kernel
+```
 
-Some directories may contain additional scripts or more jupyter notebooks.
-
-## Clocks Implemented
-
-1. **[2011 Bocklandt Clock](/2011_Bocklandt/)**  
-   Early epigenetic clock focused on DNA methylation changes associated with aging in human saliva samples.
-   
-2. **[2013 Horvath Clock](/2013_Horvath/)**  
-   A pioneering pan-tissue epigenetic clock by Steve Horvath, widely cited and used for human aging studies.
+Data is downloaded automatically on first use and cached in `data/`. Set `CLOCKS_DATA_DIR` to put the cache somewhere else.
 
 ## Contributing
 
-Contributions are welcome! If you have a new aging clock implementation, improvements to existing code, or ideas for additional analyses, feel free to open a pull request or submit an issue.
+Issues and pull requests are welcome, especially corrections to the science.
 
 ## License
 
-This repository is provided under the [MIT License](LICENSE). Please review the license file for more details.
-
-## Acknowledgments
-
-We gratefully acknowledge the authors of the original aging clocks, the research community for continuous development, and data contributors for making their datasets available for public research.
+Code and text: [MIT](LICENSE). The datasets and papers belong to their authors and are used under their original terms. Please cite the original papers.
